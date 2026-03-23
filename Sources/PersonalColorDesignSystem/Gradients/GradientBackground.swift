@@ -3,11 +3,12 @@ import SwiftUI
 // MARK: - SwiftUI Gradient Background
 
 public struct PGradientBackground: View {
+    @Environment(\.pThemeColors) var theme
     public init() {}
 
     public var body: some View {
         LinearGradient(
-            colors: [.pBackgroundTop, .pBackgroundMid, .pBackgroundBottom],
+            colors: [theme.backgroundTop, theme.backgroundMid, theme.backgroundBottom],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
@@ -27,7 +28,6 @@ struct GradientBackgroundModifier: ViewModifier {
 }
 
 public extension View {
-    /// Wraps the view with the standard deep navy/purple gradient background.
     func pGradientBackground() -> some View {
         modifier(GradientBackgroundModifier())
     }
@@ -36,12 +36,13 @@ public extension View {
 // MARK: - Accent Gradient Shape
 
 public struct PAccentGradient: View {
+    @Environment(\.pThemeColors) var theme
     public var direction: Axis = .horizontal
     public init(direction: Axis = .horizontal) { self.direction = direction }
 
     public var body: some View {
         LinearGradient(
-            colors: [.pAccentPrimary, .pAccentSecondary],
+            colors: [theme.accentPrimary, theme.accentSecondary],
             startPoint: direction == .horizontal ? .leading : .top,
             endPoint: direction == .horizontal ? .trailing : .bottom
         )
