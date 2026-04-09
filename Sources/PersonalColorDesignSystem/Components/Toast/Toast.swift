@@ -101,13 +101,6 @@ struct ToastModifier: ViewModifier {
             if isPresented {
                 ToastView(toast: toast)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
-                            withAnimation(.easeOut(duration: 0.3)) {
-                                isPresented = false
-                            }
-                        }
-                    }
                     .onTapGesture {
                         withAnimation(.easeOut(duration: 0.2)) {
                             isPresented = false
@@ -116,6 +109,19 @@ struct ToastModifier: ViewModifier {
             }
         }
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: isPresented)
+        // toast 메시지가 바뀔 때마다 이전 Task를 취소하고 새 dismiss Task 시작.
+        // DispatchQueue.asyncAfter와 달리 stale closure 문제가 없다.
+        .task(id: toast) {
+            guard isPresented else { return }
+            do {
+                try await Task.sleep(for: .seconds(duration))
+                withAnimation(.easeOut(duration: 0.3)) {
+                    isPresented = false
+                }
+            } catch {
+                // Task cancelled (새 toast 또는 수동 dismiss) → 아무것도 하지 않음
+            }
+        }
     }
 }
 
