@@ -8,6 +8,7 @@ import SwiftUI
 /// PTextField(placeholder: "검색", text: $query, leadingIcon: "magnifyingglass", trailingIcon: "xmark.circle.fill")
 /// ```
 public struct PTextField: View {
+    @Environment(\.pThemeColors) private var theme
     let placeholder: String
     @Binding var text: String
     let leadingIcon: String?
@@ -43,7 +44,7 @@ public struct PTextField: View {
                 TextField("", text: $text)
                     .foregroundStyle(Color.pTextPrimary)
                     .font(.pBody(15))
-                    .tint(Color.pAccentPrimary)
+                    .tint(theme.accentPrimary)
             }
 
             if let trailingIcon, !text.isEmpty {
