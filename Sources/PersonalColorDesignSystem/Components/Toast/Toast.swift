@@ -114,7 +114,7 @@ struct ToastModifier: ViewModifier {
         .task(id: toast) {
             guard isPresented else { return }
             do {
-                try await Task.sleep(for: .seconds(duration))
+                try await Task.sleep(nanoseconds: UInt64(duration * 1_000_000_000))
                 withAnimation(.easeOut(duration: 0.3)) {
                     isPresented = false
                 }
