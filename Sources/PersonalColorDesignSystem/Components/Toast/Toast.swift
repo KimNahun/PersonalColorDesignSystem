@@ -48,12 +48,22 @@ public struct ToastData: Equatable {
 // MARK: - Toast View
 
 struct ToastView: View {
+    @Environment(\.pThemeColors) private var theme
     let toast: ToastData
+
+    private var iconColor: Color {
+        switch toast.type {
+        case .success: return .pSuccess
+        case .warning: return .pWarning
+        case .error:   return .pDestructive
+        case .info:    return theme.accentPrimary
+        }
+    }
 
     var body: some View {
         HStack(spacing: 10) {
             Image(systemName: toast.iconName)
-                .foregroundStyle(toast.iconColor)
+                .foregroundStyle(iconColor)
                 .font(.system(size: 16, weight: .semibold))
 
             Text(toast.message)
