@@ -5,6 +5,10 @@
 
 # Xcode
 *.xcodeproj/
+!Palet.xcodeproj/
+!Palet.xcodeproj/project.pbxproj
+!Palet.xcodeproj/project.xcworkspace/
+!Palet.xcodeproj/project.xcworkspace/contents.xcworkspacedata
 xcuserdata/
 *.xccheckout
 *.xcscmblueprint
