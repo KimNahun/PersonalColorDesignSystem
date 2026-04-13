@@ -8,13 +8,15 @@ import SwiftUI
 
 // MARK: - Root Container
 
-struct SampleAppView: View {
+public struct SampleAppView: View {
     @State private var selectedTheme: PTheme = .winter
     @State private var phase: AppPhase = .splash
 
+    public init() {}
+
     enum AppPhase { case splash, themeSelect, main }
 
-    var body: some View {
+    public var body: some View {
         ZStack {
             switch phase {
             case .splash:
@@ -223,8 +225,8 @@ private extension PTheme {
         switch self {
         case .spring: return "따뜻하고 생기있는 코럴 & 피치"
         case .summer: return "부드럽고 차가운 모브 & 블루"
-        case .autumn: return "깊고 풍성한 테라코타 & 골드"
-        case .winter: return "선명하고 강렬한 라벤더 & 핑크"
+        case .autumn: return "자연스럽고 깊은 올리브 & 머스타드"
+        case .winter: return "시원하고 투명한 아이시 블루 & 민트"
         }
     }
 }

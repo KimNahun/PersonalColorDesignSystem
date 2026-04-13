@@ -76,26 +76,26 @@ public enum PTheme: String, CaseIterable, Identifiable {
                 backgroundBottom:Color(red: 0.08, green: 0.10, blue: 0.18)
             )
 
-        // 가을: 따뜻하고 깊은 테라코타 + 골드
-        // 참고: Strava, Bear 계열
+        // 가을: 올리브 그린 + 머스타드 (봄 코럴과 완전히 다른 색상)
+        // hue ~80° 계열 — 깊고 자연적인 그린/옐로우
         case .autumn:
             return PThemeColors(
-                accentPrimary:   Color(red: 0.85, green: 0.42, blue: 0.25),
-                accentSecondary: Color(red: 0.85, green: 0.65, blue: 0.30),
-                backgroundTop:   Color(red: 0.10, green: 0.07, blue: 0.04),
-                backgroundMid:   Color(red: 0.17, green: 0.11, blue: 0.06),
-                backgroundBottom:Color(red: 0.13, green: 0.09, blue: 0.05)
+                accentPrimary:   Color(red: 0.50, green: 0.72, blue: 0.18),
+                accentSecondary: Color(red: 0.88, green: 0.72, blue: 0.18),
+                backgroundTop:   Color(red: 0.05, green: 0.08, blue: 0.03),
+                backgroundMid:   Color(red: 0.08, green: 0.13, blue: 0.04),
+                backgroundBottom:Color(red: 0.06, green: 0.10, blue: 0.03)
             )
 
-        // 겨울: 차갑고 선명한 라벤더 + 핑크 (기존 기본 테마)
-        // 참고: Spotify, Phantom, Zenly 계열
+        // 겨울: 아이시 블루 + 민트 (여름 라벤더와 완전히 다른 색상)
+        // hue ~195° 계열 — 차갑고 투명한 블루/틸
         case .winter:
             return PThemeColors(
-                accentPrimary:   Color(red: 0.70, green: 0.50, blue: 1.00),
-                accentSecondary: Color(red: 1.00, green: 0.60, blue: 0.70),
-                backgroundTop:   Color(red: 0.08, green: 0.08, blue: 0.15),
-                backgroundMid:   Color(red: 0.15, green: 0.10, blue: 0.25),
-                backgroundBottom:Color(red: 0.10, green: 0.12, blue: 0.20)
+                accentPrimary:   Color(red: 0.20, green: 0.72, blue: 1.00),
+                accentSecondary: Color(red: 0.20, green: 0.92, blue: 0.80),
+                backgroundTop:   Color(red: 0.03, green: 0.07, blue: 0.14),
+                backgroundMid:   Color(red: 0.04, green: 0.11, blue: 0.22),
+                backgroundBottom:Color(red: 0.03, green: 0.09, blue: 0.18)
             )
         }
     }
