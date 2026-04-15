@@ -147,7 +147,7 @@ public struct PAvatarGroup: View {
     }
 
     private var visible: [PAvatarContent] { Array(contents.prefix(max)) }
-    private var overflow: Int { max(0, contents.count - max) }
+    private var overflow: Int { Swift.max(0, contents.count - max) }
     private var overlap: CGFloat { size.dimension * 0.35 }
 
     public var body: some View {
