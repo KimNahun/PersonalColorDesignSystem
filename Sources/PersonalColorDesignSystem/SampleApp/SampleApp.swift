@@ -11,6 +11,7 @@ import SwiftUI
 public struct SampleAppView: View {
     @State private var selectedTheme: PTheme = .winter
     @State private var phase: AppPhase = .splash
+    @State private var toastManager = PToastManager()
 
     public init() {}
 
@@ -32,6 +33,8 @@ public struct SampleAppView: View {
             }
         }
         .pTheme(selectedTheme)
+        .environment(toastManager)
+        .pGlobalToast(toastManager)
     }
 }
 

@@ -125,15 +125,96 @@ struct ToastModifier: ViewModifier {
     }
 }
 
+// MARK: - Global Toast Manager
+
+/// 앱 전역 토스트 관리자. 루트 뷰에 주입 후 어느 화면에서든 호출 가능.
+///
+/// ```swift
+/// // 루트 뷰 (SampleAppView 등)
+/// @State private var toastManager = PToastManager()
+/// var body: some View {
+///     ContentView()
+///         .environment(toastManager)
+///         .pGlobalToast(toastManager)
+/// }
+///
+/// // 하위 뷰 어디서든
+/// @Environment(PToastManager.self) var toastManager
+/// toastManager.show("저장됐습니다", type: .success)
+/// ```
+@Observable
+public final class PToastManager {
+    public var toast: ToastData? = nil
+    public var isPresented: Bool = false
+    fileprivate var duration: TimeInterval = 2.5
+
+    public init() {}
+
+    public func show(_ message: String, type: ToastType = .info, duration: TimeInterval = 2.5) {
+        self.duration = duration
+        self.toast = ToastData(message: message, type: type)
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+            isPresented = true
+        }
+    }
+
+    public func show(_ message: String, icon: String, type: ToastType = .info, duration: TimeInterval = 2.5) {
+        self.duration = duration
+        self.toast = ToastData(message: message, type: type, customIcon: icon)
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+            isPresented = true
+        }
+    }
+}
+
+// MARK: - Global Toast Modifier
+
+private struct GlobalToastModifier: ViewModifier {
+    let manager: PToastManager
+
+    func body(content: Content) -> some View {
+        ZStack(alignment: .bottom) {
+            content
+            if manager.isPresented, let toast = manager.toast {
+                ToastView(toast: toast)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .zIndex(999)
+                    .onTapGesture {
+                        withAnimation(.easeOut(duration: 0.2)) {
+                            manager.isPresented = false
+                        }
+                    }
+            }
+        }
+        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: manager.isPresented)
+        .task(id: manager.toast) {
+            guard manager.isPresented else { return }
+            do {
+                try await Task.sleep(nanoseconds: UInt64(manager.duration * 1_000_000_000))
+                withAnimation(.easeOut(duration: 0.3)) {
+                    manager.isPresented = false
+                }
+            } catch {}
+        }
+    }
+}
+
 // MARK: - View Extension
 
 public extension View {
 
-    /// Show a toast message at the bottom of the screen.
+    /// 앱 루트에 1번만 적용. TabView/NavigationStack 화면 전환 시에도 토스트가 유지됨.
     ///
     /// ```swift
-    /// .toast(isPresented: $showToast, message: "저장됐습니다", type: .success)
+    /// SampleAppView()
+    ///     .environment(toastManager)
+    ///     .pGlobalToast(toastManager)
     /// ```
+    func pGlobalToast(_ manager: PToastManager) -> some View {
+        modifier(GlobalToastModifier(manager: manager))
+    }
+
+    /// 단일 화면 전용 토스트 (화면 전환 시 사라짐).
     func toast(
         isPresented: Binding<Bool>,
         message: String,
@@ -147,7 +228,7 @@ public extension View {
         ))
     }
 
-    /// Show a toast with a custom SF Symbol icon.
+    /// 단일 화면 전용 토스트 — 커스텀 SF Symbol 아이콘.
     func toast(
         isPresented: Binding<Bool>,
         message: String,

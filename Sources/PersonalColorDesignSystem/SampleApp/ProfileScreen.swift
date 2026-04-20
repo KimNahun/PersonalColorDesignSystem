@@ -15,9 +15,9 @@ private struct ProfilePreviewWrapper: View {
 
 struct ProfileScreen: View {
     @Environment(\.pThemeColors) var theme
+    @Environment(PToastManager.self) var toastManager
     @Binding var selectedTheme: PTheme
     @State private var showWithdrawModal = false
-    @State private var showSavedToast = false
 
     var body: some View {
         NavigationView {
@@ -45,7 +45,7 @@ struct ProfileScreen: View {
                                                 selectedTheme = themeCase
                                             }
                                             HapticManager.selection()
-                                            showSavedToast = true
+                                            toastManager.show("테마가 변경됐습니다", type: .success)
                                         } label: {
                                             VStack(spacing: 6) {
                                                 ZStack {
@@ -131,7 +131,6 @@ struct ProfileScreen: View {
             .navigationTitle("프로필")
             .navigationBarTitleDisplayMode(.large)
         }
-        .toast(isPresented: $showSavedToast, message: "테마가 변경됐습니다", type: .success)
         .actionCheckModal(
             isPresented: $showWithdrawModal,
             title: "정말 탈퇴하시겠습니까?\n모든 기록이 삭제됩니다.",

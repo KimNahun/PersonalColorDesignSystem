@@ -6,8 +6,8 @@ import SwiftUI
 
 struct HomeScreen: View {
     @Environment(\.pThemeColors) var theme
+    @Environment(PToastManager.self) var toastManager
     @State private var selectedItem: StyleItem? = nil
-    @State private var showToast = false
 
     var body: some View {
         NavigationView {
@@ -58,7 +58,7 @@ struct HomeScreen: View {
                                     title: "아직 기록이 없어요",
                                     description: "오늘의 스타일을 기록해보세요.",
                                     actionTitle: "기록 시작",
-                                    action: { showToast = true }
+                                    action: { toastManager.show("준비 중인 기능이에요", type: .info) }
                                 )
                             }
                         }
@@ -73,7 +73,6 @@ struct HomeScreen: View {
             .sheet(item: $selectedItem) { item in
                 DetailScreen(item: item)
             }
-            .toast(isPresented: $showToast, message: "준비 중인 기능이에요", type: .info)
         }
     }
 }
