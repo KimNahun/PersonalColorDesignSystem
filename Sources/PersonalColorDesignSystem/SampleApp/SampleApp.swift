@@ -248,25 +248,23 @@ struct MainTabView: View {
     @Binding var selectedTheme: PTheme
     @State private var selectedTab = 0
 
+    private let tabItems = [
+        PTabItem(icon: "house",         title: "홈"),
+        PTabItem(icon: "magnifyingglass", title: "탐색"),
+        PTabItem(icon: "person",         title: "프로필"),
+    ]
+
     var body: some View {
         TabView(selection: $selectedTab) {
-            HomeScreen()
-                .tabItem {
-                    Label("홈", systemImage: "house.fill")
-                }
-                .tag(0)
-
-            ExploreScreen()
-                .tabItem {
-                    Label("탐색", systemImage: "magnifyingglass")
-                }
-                .tag(1)
-
-            ProfileScreen(selectedTheme: $selectedTheme)
-                .tabItem {
-                    Label("프로필", systemImage: "person.fill")
-                }
-                .tag(2)
+            HomeScreen().tag(0)
+            ExploreScreen().tag(1)
+            ProfileScreen(selectedTheme: $selectedTheme).tag(2)
+        }
+        .toolbar(.hidden, for: .tabBar)
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            PTabBar(items: tabItems, selected: $selectedTab)
+                .padding(.bottom, 20)
+                .background(Color.pTabBarBackground.ignoresSafeArea(edges: .bottom))
         }
     }
 }
