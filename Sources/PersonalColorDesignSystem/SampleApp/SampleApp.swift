@@ -18,23 +18,31 @@ public struct SampleAppView: View {
     enum AppPhase { case splash, themeSelect, main }
 
     public var body: some View {
-        ZStack {
-            switch phase {
-            case .splash:
-                SplashScreen {
-                    withAnimation(.easeInOut(duration: 0.5)) { phase = .themeSelect }
+        if phase == .main {
+            MainTabView(selectedTheme: $selectedTheme)
+                .pTheme(selectedTheme)
+                .environment(toastManager)
+                .pGlobalToast(toastManager)
+                .transition(.opacity)
+        } else {
+            ZStack {
+                switch phase {
+                case .splash:
+                    SplashScreen {
+                        withAnimation(.easeInOut(duration: 0.5)) { phase = .themeSelect }
+                    }
+                case .themeSelect:
+                    ThemeSelectScreen(selectedTheme: $selectedTheme) {
+                        withAnimation(.easeInOut(duration: 0.4)) { phase = .main }
+                    }
+                default:
+                    EmptyView()
                 }
-            case .themeSelect:
-                ThemeSelectScreen(selectedTheme: $selectedTheme) {
-                    withAnimation(.easeInOut(duration: 0.4)) { phase = .main }
-                }
-            case .main:
-                MainTabView(selectedTheme: $selectedTheme)
             }
+            .pTheme(selectedTheme)
+            .environment(toastManager)
+            .transition(.opacity)
         }
-        .pTheme(selectedTheme)
-        .environment(toastManager)
-        .pGlobalToast(toastManager)
     }
 }
 
