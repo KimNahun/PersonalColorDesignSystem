@@ -142,27 +142,36 @@ struct ToastModifier: ViewModifier {
 /// @Environment(PToastManager.self) var toastManager
 /// toastManager.show("저장됐습니다", type: .success)
 /// ```
+@MainActor
 @Observable
 public final class PToastManager {
     public var toast: ToastData? = nil
     public var isPresented: Bool = false
-    fileprivate var duration: TimeInterval = 2.5
+    private var dismissTask: Task<Void, Never>? = nil
 
     public init() {}
 
     public func show(_ message: String, type: ToastType = .info, duration: TimeInterval = 2.5) {
-        self.duration = duration
-        self.toast = ToastData(message: message, type: type)
-        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-            isPresented = true
-        }
+        present(ToastData(message: message, type: type), duration: duration)
     }
 
     public func show(_ message: String, icon: String, type: ToastType = .info, duration: TimeInterval = 2.5) {
-        self.duration = duration
-        self.toast = ToastData(message: message, type: type, customIcon: icon)
-        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-            isPresented = true
+        present(ToastData(message: message, type: type, customIcon: icon), duration: duration)
+    }
+
+    public func dismiss() {
+        dismissTask?.cancel()
+        withAnimation(.easeOut(duration: 0.2)) { isPresented = false }
+    }
+
+    private func present(_ data: ToastData, duration: TimeInterval) {
+        dismissTask?.cancel()
+        toast = data
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) { isPresented = true }
+        dismissTask = Task {
+            try? await Task.sleep(for: .seconds(duration))
+            guard !Task.isCancelled else { return }
+            withAnimation(.easeOut(duration: 0.3)) { isPresented = false }
         }
     }
 }
@@ -179,23 +188,10 @@ private struct GlobalToastModifier: ViewModifier {
                 ToastView(toast: toast)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
                     .zIndex(999)
-                    .onTapGesture {
-                        withAnimation(.easeOut(duration: 0.2)) {
-                            manager.isPresented = false
-                        }
-                    }
+                    .onTapGesture { manager.dismiss() }
             }
         }
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: manager.isPresented)
-        .task(id: manager.toast) {
-            guard manager.isPresented else { return }
-            do {
-                try await Task.sleep(nanoseconds: UInt64(manager.duration * 1_000_000_000))
-                withAnimation(.easeOut(duration: 0.3)) {
-                    manager.isPresented = false
-                }
-            } catch {}
-        }
     }
 }
 
