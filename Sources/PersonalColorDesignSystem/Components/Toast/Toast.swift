@@ -83,7 +83,6 @@ struct ToastView: View {
                 .shadow(color: Color.pShadow, radius: 16, x: 0, y: 4)
         )
         .padding(.horizontal, 24)
-        .padding(.bottom, 32)
     }
 }
 
@@ -186,11 +185,12 @@ private struct GlobalToastModifier: ViewModifier {
             .overlay(alignment: .bottom) {
                 if manager.isPresented, let toast = manager.toast {
                     ToastView(toast: toast)
-                        .transition(.move(edge: .bottom).combined(with: .opacity))
                         .onTapGesture { manager.dismiss() }
+                        .padding(.bottom, 32)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: manager.isPresented)
                 }
             }
-            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: manager.isPresented)
     }
 }
 
