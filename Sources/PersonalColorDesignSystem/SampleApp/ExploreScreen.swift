@@ -21,7 +21,7 @@ struct ExploreScreen: View {
     }
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
                 PGradientBackground()
 

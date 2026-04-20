@@ -10,7 +10,7 @@ struct HomeScreen: View {
     @State private var selectedItem: StyleItem? = nil
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
                 PGradientBackground()
 

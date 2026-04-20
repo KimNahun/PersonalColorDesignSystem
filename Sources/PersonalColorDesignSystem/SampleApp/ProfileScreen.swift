@@ -20,7 +20,7 @@ struct ProfileScreen: View {
     @State private var showWithdrawModal = false
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
                 PGradientBackground()
 
