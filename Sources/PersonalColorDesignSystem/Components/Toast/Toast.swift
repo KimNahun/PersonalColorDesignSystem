@@ -182,16 +182,15 @@ private struct GlobalToastModifier: ViewModifier {
     let manager: PToastManager
 
     func body(content: Content) -> some View {
-        ZStack(alignment: .bottom) {
-            content
-            if manager.isPresented, let toast = manager.toast {
-                ToastView(toast: toast)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
-                    .zIndex(999)
-                    .onTapGesture { manager.dismiss() }
+        content
+            .overlay(alignment: .bottom) {
+                if manager.isPresented, let toast = manager.toast {
+                    ToastView(toast: toast)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                        .onTapGesture { manager.dismiss() }
+                }
             }
-        }
-        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: manager.isPresented)
+            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: manager.isPresented)
     }
 }
 
