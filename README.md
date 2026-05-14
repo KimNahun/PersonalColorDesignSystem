@@ -217,4 +217,4 @@ Button("탭") { }
 
 ## 사용 중인 프로젝트
 
-- [BetterAlarm](https://github.com/KimNahun/BetterAlarm)
+- [BetterAlarm](https://github.com/KimNahun/Better-Alarm)
